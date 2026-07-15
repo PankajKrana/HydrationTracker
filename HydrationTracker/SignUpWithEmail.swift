@@ -46,7 +46,7 @@ struct SignUpWithEmail: View {
                 
 
                 
-                SignInButton(title: "Log In") {
+                ReusableButton(title: "Log In") {
                     // action
                 }
                 

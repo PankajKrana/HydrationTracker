@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SignInButton: View {
+struct ReusableButton: View {
     let title: String
     var backgroundColor: Color = .blue
     var foregroundColor: Color = .white
@@ -122,4 +122,39 @@ struct PasswordTextField: View {
 }
 
 
+struct SkipButton: View {
+    let action: () -> Void
 
+    var body: some View {
+        Button(action: action) {
+            Text("Skip")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.blue)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(.white.opacity(0.9))
+                .clipShape(Capsule())
+        }
+    }
+}
+
+
+
+struct CustomBackButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action){
+
+            Circle()
+                .fill(.white.opacity(0.9))
+                .frame(width: 42,height: 42)
+                .overlay {
+
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(.black)
+                }
+        }
+    }
+}

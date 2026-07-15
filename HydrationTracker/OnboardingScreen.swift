@@ -35,7 +35,7 @@ struct OnboardingScreen: View {
                     .font(.largeTitle)
                     .multilineTextAlignment(.center)
                 
-                SignInButton(title: "Continue with Email") {
+                ReusableButton(title: "Continue with Email") {
                     // Email sign in
                 }
                 
