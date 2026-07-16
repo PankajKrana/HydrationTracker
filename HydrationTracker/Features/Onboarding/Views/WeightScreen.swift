@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WeightScreen: View {
+    @Environment(AppRouter.self) private var router
 
     @State private var weight: Double = 60
 
@@ -25,13 +26,13 @@ struct WeightScreen: View {
                 HStack {
 
                     CustomBackButton {
-
+                        router.pop()
                     }
 
                     Spacer()
 
                     Button("Skip") {
-
+                        router.push(.height)
                     }
                     .font(.headline)
                     .foregroundStyle(.black)
@@ -73,7 +74,7 @@ struct WeightScreen: View {
                 Spacer()
 
                 ReusableButton(title: "Continue") {
-
+                    router.push(.height)
                 }
                 .padding(.horizontal)
 
@@ -81,6 +82,7 @@ struct WeightScreen: View {
                     .frame(height: 25)
 
             }
+            
 
         }
 
@@ -90,4 +92,5 @@ struct WeightScreen: View {
 
 #Preview {
     WeightScreen()
+        .environment(AppRouter())
 }

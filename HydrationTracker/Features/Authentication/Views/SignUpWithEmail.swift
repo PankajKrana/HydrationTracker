@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct SignUpWithEmail: View {
-    
-    @State private var email = ""
-    @State private var password = ""
-    @State private var rememberMe = true
-    
+    @Environment(AppRouter.self) private var router
+    @State private var vm = SignUpViewModel()
+
     var body: some View {
-        
+        @Bindable var vm = vm
         ZStack {
             appBg.ignoresSafeArea()
-            
+
             VStack(spacing: 24) {
+                Spacer()
                 Image(.waterdrop)
                     .resizable()
                     .scaledToFit()
@@ -33,73 +32,40 @@ struct SignUpWithEmail: View {
 
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Email")
-                    EmailTextField(email: $email)
+                    EmailTextField(email: $vm.email)
 
                     Text("Password")
-                    PasswordTextField(password: $password)
-                    
-                    Centerpart(isActive: $rememberMe)
+                    PasswordTextField(password: $vm.password)
 
+                    Centerpart(isActive: $vm.rememberMe)
                 }
                 .padding(.horizontal)
-                
-                
 
-                
+                Spacer()
+
                 ReusableButton(title: "Log In") {
-                    // action
+                    router.push(.onboardingGender)
                 }
-                
-                bottonbar
+                .disabled(!vm.canSubmit)
 
+                bottonbar
             }
-            
         }
     }
+
     var bottonbar: some View {
         HStack {
             Text("Don't have any account?")
-            Button {
-                
-            } label: {
+            Button {} label: {
                 Text("Create Account")
                     .underline()
-                
             }
         }
         .multilineTextAlignment(.center)
     }
 }
 
-
-struct Centerpart: View {
-    @Binding var isActive: Bool
-
-    var body: some View {
-        HStack {
-            Button {
-                isActive.toggle()
-            } label: {
-                Image(systemName: isActive
-                      ? "checkmark.square.fill"
-                      : "square")
-                    .foregroundStyle(.gray)
-            }
-
-            Text("Remember Me")
-
-            Spacer()
-
-            Button {
-
-            } label: {
-                Text("Forgot Password?")
-                    .foregroundStyle(.black)
-                    .underline()
-            }
-        }
-    }
-}
 #Preview {
     SignUpWithEmail()
+        .environment(AppRouter())
 }

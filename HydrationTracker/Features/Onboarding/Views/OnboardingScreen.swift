@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OnboardingScreen: View {
+    @Environment(AppRouter.self) private var router
+
     var body: some View {
         ZStack {
             appBg.ignoresSafeArea()
@@ -36,7 +38,7 @@ struct OnboardingScreen: View {
                     .multilineTextAlignment(.center)
                 
                 ReusableButton(title: "Continue with Email") {
-                    // Email sign in
+                    router.push(.signUp)
                 }
                 
                 BreakerView()
@@ -56,6 +58,7 @@ struct OnboardingScreen: View {
 
             }
             
+            
         }
     }
     
@@ -64,17 +67,9 @@ struct OnboardingScreen: View {
 
 }
 
-extension View {
-    @ViewBuilder
-    var appBg: some View {
-        LinearGradient(colors: [
-            .blue.opacity(0.34), .white
-        ], startPoint: .top, endPoint: .bottom)
-        
-    }
-}
 
 
 #Preview {
     OnboardingScreen()
+        .environment(AppRouter())
 }
