@@ -24,7 +24,7 @@ struct RootView: View {
                     case .bedTime:          BedTimeScreen()
                     case .dailyGoal:        DailyGoalScreen_()
                     case .home:             HomeScreen()
-                    case .history:          HistryScreen()
+                    case .history:          HistoryScreen()
                     case .insight:          InsightScreen()
                     case .setting:          SettingScreen()
                     }
