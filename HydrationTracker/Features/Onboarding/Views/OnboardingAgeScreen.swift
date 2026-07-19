@@ -27,7 +27,7 @@ struct OnboardingAgeScreen: View {
                     Button("Skip") {
                         router.push(.age)
                     }
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
                     .fontWeight(.medium)
                 }
                 .padding()

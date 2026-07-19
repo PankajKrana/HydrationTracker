@@ -93,7 +93,7 @@ struct HeightScreen: View {
                     } label: {
                         Text("Continue")
                             .font(.headline)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(.primary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 18)
                             .background(Color.blue.opacity(0.3))

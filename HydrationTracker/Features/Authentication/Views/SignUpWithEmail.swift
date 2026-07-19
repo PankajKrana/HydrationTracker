@@ -23,10 +23,10 @@ struct SignUpWithEmail: View {
                     .scaledToFit()
                     .frame(width: 100)
 
-                Text("Welcome Back")
+                Text("Create Account")
                     .font(.largeTitle)
 
-                Text("Sign up to protect your device")
+                Text("Sign up to start tracking")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
 
@@ -43,25 +43,12 @@ struct SignUpWithEmail: View {
 
                 Spacer()
 
-                ReusableButton(title: "Log In") {
+                ReusableButton(title: "Create Account") {
                     router.push(.onboardingGender)
                 }
                 .disabled(!vm.canSubmit)
-
-                bottonbar
             }
         }
-    }
-
-    var bottonbar: some View {
-        HStack {
-            Text("Don't have any account?")
-            Button {} label: {
-                Text("Create Account")
-                    .underline()
-            }
-        }
-        .multilineTextAlignment(.center)
     }
 }
 

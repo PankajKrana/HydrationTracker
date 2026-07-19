@@ -20,7 +20,7 @@ struct Centerpart: View {
 
             Button {} label: {
                 Text("Forgot Password?")
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
                     .underline()
             }
         }

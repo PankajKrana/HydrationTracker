@@ -97,10 +97,10 @@ extension WeightRuler {
 
             Image(systemName: "arrowtriangle.down.fill")
                 .font(.title2)
-                .foregroundStyle(.black)
+                .foregroundStyle(.primary)
 
             Capsule()
-                .fill(.black)
+                .fill(.primary)
                 .frame(width: 2, height: 18)
 
         }

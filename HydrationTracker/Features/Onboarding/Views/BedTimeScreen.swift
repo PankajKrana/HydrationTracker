@@ -41,38 +41,14 @@ struct BedTimeScreen: View {
 
                 Spacer()
 
-                HStack(spacing: 0) {
-                    Image(.human)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 290)
+                Image(.human)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 290)
 
-                    Picker("", selection: $vm.hours) {
-                        ForEach(1...12, id: \.self) {
-                            Text("\($0)")
-                        }
-                    }
-
-                    Text(":")
-                        .font(.largeTitle)
-
-                    Picker("", selection: $vm.minutes) {
-                        ForEach(0..<60, id: \.self) {
-                            Text(String(format: "%02d", $0))
-                        }
-                    }
-                }
-                .pickerStyle(.wheel)
-
-                Spacer()
-
-                Picker("", selection: $vm.meridiem) {
-                    ForEach(BedTimeViewModel.Meridiem.allCases, id: \.self) {
-                        Text($0.rawValue)
-                    }
-                }
-                .pickerStyle(.wheel)
-                .padding(.horizontal, 20)
+                DatePicker("Bedtime", selection: $vm.bedtime, displayedComponents: .hourAndMinute)
+                    .pickerStyle(.wheel)
+                    .labelsHidden()
 
                 Spacer()
 

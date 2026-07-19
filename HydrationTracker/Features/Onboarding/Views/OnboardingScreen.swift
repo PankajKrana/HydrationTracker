@@ -16,6 +16,14 @@ struct OnboardingScreen: View {
             
             VStack(spacing: 5) {
                 HStack {
+                    Spacer()
+                    SkipButton {
+                        router.push(.content)
+                    }
+                    .padding()
+
+                }
+                HStack {
                     SideImageView(
                         mirrored: true,
                         xOffset: -30,

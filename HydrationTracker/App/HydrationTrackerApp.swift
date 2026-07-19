@@ -11,7 +11,24 @@ import SwiftUI
 struct HydrationTrackerApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
+            AppContainer()
         }
+    }
+}
+
+struct AppContainer: View {
+    @State private var showSplash = true
+
+    var body: some View {
+        ZStack {
+            if showSplash {
+                SplashScreen(isPresented: $showSplash)
+                    .transition(.opacity)
+            } else {
+                RootView()
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.4), value: showSplash)
     }
 }

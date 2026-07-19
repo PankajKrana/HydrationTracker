@@ -8,11 +8,12 @@ struct SkipButton: View {
             Text("Skip")
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.blue)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(.regularMaterial)
-                .clipShape(Capsule())
+                .foregroundStyle(.primary)
+//                .padding(.horizontal, 14)
+//                .padding(.vertical, 8)
+//                .frame(minHeight: 44)
+//                .background(.regularMaterial)
+//                .clipShape(Capsule())
         }
     }
 }

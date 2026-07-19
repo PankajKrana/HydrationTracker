@@ -14,6 +14,7 @@ struct RootView: View {
         NavigationStack(path: $router.path) {
             OnboardingScreen()
                 .navigationDestination(for: AppRouter.Route.self) { route in
+                    Group {
                     switch route {
                     case .content:      ContentView()
                     case .onboarding:       OnboardingScreen()
@@ -29,6 +30,8 @@ struct RootView: View {
                     case .insight:          InsightScreen()
                     case .setting:          SettingScreen()
                     }
+                    }
+                    .navigationBarBackButtonHidden(true)
                 }
         }
         .environment(router)
