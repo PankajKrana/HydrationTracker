@@ -14,10 +14,3 @@ struct DayLog: Identifiable {
     let amount: Double
     let isToday: Bool
 }
-
-struct IntakeEntry: Identifiable {
-    let id = UUID()
-    let title: String
-    let time: String
-    let amount: String
-}

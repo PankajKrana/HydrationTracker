@@ -16,4 +16,8 @@ final class SignUpViewModel {
     var isEmailValid: Bool { email.contains("@") && email.contains(".") }
     var isPasswordValid: Bool { password.count >= 6 }
     var canSubmit: Bool { isEmailValid && isPasswordValid }
+
+    var displayName: String {
+        (email.components(separatedBy: "@").first ?? "there").capitalized
+    }
 }

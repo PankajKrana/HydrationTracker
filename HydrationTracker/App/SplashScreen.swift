@@ -19,8 +19,19 @@ struct SplashScreen: View {
 
     var body: some View {
         ZStack {
-            appBg
-                .ignoresSafeArea()
+            LinearGradient(
+                colors: [Color.hydraPrimary, Color.hydraPrimaryLight, Color.hydraSky],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+
+            // Soft glow orbs
+            Circle()
+                .fill(Color.white.opacity(0.18))
+                .frame(width: 260, height: 260)
+                .blur(radius: 50)
+                .offset(x: -120, y: -200)
 
             VStack(spacing: 20) {
                 ZStack {
@@ -42,15 +53,15 @@ struct SplashScreen: View {
 
                 VStack(spacing: 8) {
                     Text("Hydration Tracker")
-                        .font(.largeTitle)
+                        .font(.hero)
                         .bold()
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.white)
                         .offset(y: titleOffset)
                         .opacity(titleOpacity)
 
                     Text("Stay hydrated, stay healthy")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.85))
                         .opacity(taglineOpacity)
                 }
             }

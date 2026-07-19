@@ -9,161 +9,195 @@ import SwiftUI
 
 struct HomeScreen: View {
     @Environment(AppRouter.self) private var router
+    @State private var store = IntakeStore.shared
+    @State private var showingPlusSheet = false
+    @AppStorage(StorageKey.userName) private var userName = ""
+    @AppStorage(StorageKey.dailyGoalLiters) private var goalLiters: Double = 3.0
+
+    private var displayName: String { userName.isEmpty ? "there" : userName }
+    private var goalML: Int { Int(goalLiters * 1000) }
+    private var todayML: Int { store.todayTotalML }
+    private var remainingML: Int { max(goalML - todayML, 0) }
+    private var progress: Double { goalML > 0 ? min(Double(todayML) / Double(goalML), 1) : 0 }
+    private var temperature: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        return "\(18 + (hour % 12))°"
+    }
+    private var calories: String { "\(todayML / 20) kcal" }
+
+    private let quickAdds: [(String, Int)] = [
+        ("+100 ml", 100), ("+250 ml", 250), ("+500 ml", 500), ("+1L", 1000)
+    ]
+
     var body: some View {
         ZStack {
             appBg.ignoresSafeArea()
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: 4) {
-                    headerView
-                    
-                    Spacer()
-                    
-                    waterIntakeView
-                    
-                    Spacer()
-                    
-                    
-                    HStack(spacing: 10) {
-                        RemaningConsistensyView(title: "Remaning", subTitle: "1.4L/3.6L")
-                        
-                        RemaningConsistensyView(title: "Consistency", subTitle: "12 days")
-                        
-                    }
-                    
-                    Spacer()
-                    
-                    Text("Today's Hydration")
-                
-                    InsertWaterIntakeView(title: "Evening Refile", intakeTime: "7:20 PM", intakeWater: "+300 ml")
-                    
-                    InsertWaterIntakeView(title: "Afternoon Refile", intakeTime: "8:00 PM", intakeWater: "+300 ml")
-                    InsertWaterIntakeView(title: "Evening Refile", intakeTime: "7:20 PM", intakeWater: "+300 ml")
-                    
-                    InsertWaterIntakeView(title: "Afternoon Refile", intakeTime: "8:00 PM", intakeWater: "+300 ml")
-                    InsertWaterIntakeView(title: "Evening Refile", intakeTime: "7:20 PM", intakeWater: "+300 ml")
-                    
-                    InsertWaterIntakeView(title: "Afternoon Refile", intakeTime: "8:00 PM", intakeWater: "+300 ml")
 
-                    
+            ScrollView {
+                VStack(spacing: Spacing.s4) {
+                    header
+                    heroRing
+                    quickAddRow
+                    statsGrid
+                    dailyGoalCard
+                    reminderCard
+                    Spacer(minLength: 90)
                 }
-                .padding()
+                .padding(.horizontal, Spacing.screen)
+                .padding(.top, 12)
                 .scrollIndicators(.hidden)
             }
-        }
-    }
-}
 
-extension View {
-    @ViewBuilder
-    var headerView: some View {
-        HStack {
-            Image(systemName: "person")
-                .font(.title2)
-                .padding()
-                .background(.regularMaterial)
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading) {
-                Text("Hello, Rohan")
-                Text("Stay hydrated today")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            
-            Button {
-                // action
-            } label: {
-                Image(systemName: "bell")
-                    .font(.title2)
-                    .foregroundStyle(.primary)
-                    .padding()
-                    .background(.regularMaterial)
-                    .clipShape(Circle())
-            }
-
-            
-        }
-
-    }
-    
-    @ViewBuilder
-    var waterIntakeView: some View {
-        HStack {
-            Image(.waterBottle)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 240)
-            
-            VStack(alignment: .leading) {
-                Text("Goal: 3.0L")
-                
-                Text("1.6L")
-                    .font(.largeTitle)
-                Text("Today's intake")
-                
-            }
-        }
-
-    }
-}
-
-struct RemaningConsistensyView: View {
-    @State var title: String
-    @State var subTitle: String
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(title)
-                .font(.headline)
-                .foregroundStyle(.gray)
-
-            Text(subTitle)
-
-            HStack {
+            // Floating action button
+            VStack {
                 Spacer()
-
-                Image(.side)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 120)
+                HStack {
+                    Spacer()
+                    Button {
+                        showingPlusSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title.weight(.semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 60, height: 60)
+                            .background(LinearGradient.hydra)
+                            .clipShape(Circle())
+                            .shadow(color: Color.hydraPrimary.opacity(0.45), radius: 16, y: 8)
+                    }
+                    .accessibilityLabel("Log Drink")
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 24)
+                }
             }
         }
-        .padding(.leading, 16)
-        .padding(.top, 16)
-        .padding(.bottom, 16)
-        .background(appBg)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .sheet(isPresented: $showingPlusSheet) {
+            PlusSheetView()
+                .presentationDetents([.medium, .large])
+                .presentationBackground(.regularMaterial)
+        }
     }
-}
 
-struct InsertWaterIntakeView: View {
-    @State var title: String
-    @State var intakeTime: String
-    @State var intakeWater: String
-    var body: some View {
-        HStack {
-            Image(.waterBottle)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60)
-            
-            VStack(alignment: .leading) {
-                Text(title)
-                Text(intakeTime)
-                    .font(.subheadline)
-                    .foregroundStyle(.gray)
+    // MARK: - Header
+
+    private var header: some View {
+        HStack(spacing: 14) {
+            Image(systemName: "person.crop.circle.fill")
+                .font(.system(size: 46))
+                .foregroundStyle(Color.hydraPrimary.gradient)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Hello, \(displayName)")
+                    .font(.subtitle)
+                    .foregroundStyle(Color.hydraInk)
+                Text("Stay hydrated today")
+                    .font(.bodySmall)
+                    .foregroundStyle(Color.hydraInkSecondary)
             }
-            
             Spacer()
-            
-            Text(intakeWater)
+            IconButton(systemImage: "bell", action: {})
         }
-        .padding()
-        .background(.regularMaterial)
-        .clipShape(.rect)
+    }
+
+    // MARK: - Hero progress ring
+
+    private var heroRing: some View {
+        Card(padding: Spacing.s4, radius: Radius.xl) {
+            VStack(spacing: 16) {
+                WaterProgressRing(progress: progress, lineWidth: 22) {
+                    VStack(spacing: 2) {
+                        Text(String(format: "%.1fL", Double(todayML) / 1000))
+                            .font(.hero)
+                            .foregroundStyle(Color.hydraInk)
+                        Text("of \(String(format: "%.1fL", goalLiters))")
+                            .font(.caption)
+                            .foregroundStyle(Color.hydraInkSecondary)
+                    }
+                }
+                .frame(width: 200, height: 200)
+
+                Text(progress >= 1 ? "Goal reached — amazing! 🎉" : "\(remainingML) ml to go")
+                    .font(.emphasis)
+                    .foregroundStyle(Color.hydraPrimary)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+
+    // MARK: - Quick add
+
+    private var quickAddRow: some View {
+        HStack(spacing: 12) {
+            ForEach(quickAdds, id: \.0) { label, ml in
+                QuickAddButton(label: label) {
+                    store.add(amountML: ml)
+                }
+            }
+        }
+    }
+
+    // MARK: - Stats
+
+    private var statsGrid: some View {
+        LazyVGrid(
+            columns: [GridItem(.flexible()), GridItem(.flexible())],
+            spacing: 14
+        ) {
+            StatTile(icon: "percent", value: "\(Int(progress * 100))%", label: "Progress", tint: Color.hydraPrimary)
+            StatTile(icon: "flame.fill", value: "\(store.streakDays)d", label: "Streak", tint: Color.hydraWarning)
+            StatTile(icon: "bolt.fill", value: calories, label: "Calories", tint: Color.hydraCyan)
+            StatTile(icon: "thermometer", value: temperature, label: "Temperature", tint: Color.hydraSky)
+        }
+    }
+
+    // MARK: - Daily goal
+
+    private var dailyGoalCard: some View {
+        Card {
+            HStack {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Daily Goal")
+                        .font(.emphasis)
+                        .foregroundStyle(Color.hydraInk)
+                    Text("Your target intake")
+                        .font(.caption)
+                        .foregroundStyle(Color.hydraInkSecondary)
+                    Text(String(format: "%.1f L", goalLiters))
+                        .font(.title)
+                        .foregroundStyle(Color.hydraPrimary)
+                        .padding(.top, 4)
+                }
+                Spacer()
+                ZStack {
+                    Circle()
+                        .fill(Color.hydraPrimary.opacity(0.12))
+                        .frame(width: 56, height: 56)
+                    Image(systemName: "target")
+                        .font(.title2)
+                        .foregroundStyle(Color.hydraPrimary)
+                }
+            }
+        }
+    }
+
+    // MARK: - Reminder
+
+    @State private var reminderOn = true
+    private var reminderCard: some View {
+        Card {
+            HStack {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Water Reminder")
+                        .font(.emphasis)
+                        .foregroundStyle(Color.hydraInk)
+                    Text("Next reminder · 2:00 PM")
+                        .font(.caption)
+                        .foregroundStyle(Color.hydraInkSecondary)
+                }
+                Spacer()
+                Toggle("", isOn: $reminderOn)
+                    .labelsHidden()
+                    .tint(Color.hydraPrimary)
+            }
+        }
     }
 }
 

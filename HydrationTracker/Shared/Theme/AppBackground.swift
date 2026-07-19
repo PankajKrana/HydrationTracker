@@ -1,10 +1,25 @@
 import SwiftUI
 
 extension View {
+    /// Premium hydration background: soft blue-to-white vertical gradient.
     @ViewBuilder
     var appBg: some View {
-        LinearGradient(colors: [
-            .blue.opacity(0.34), Color(.systemBackground)
-        ], startPoint: .top, endPoint: .bottom)
+        LinearGradient(
+            colors: [Color.hydraPrimary.opacity(0.16), Color.hydraBg, Color.white],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+}
+
+/// Standalone background view for screens that need it as a layer.
+struct AppBackground: View {
+    var body: some View {
+        LinearGradient(
+            colors: [Color.hydraPrimary.opacity(0.16), Color.hydraBg, Color.white],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+        .ignoresSafeArea()
     }
 }

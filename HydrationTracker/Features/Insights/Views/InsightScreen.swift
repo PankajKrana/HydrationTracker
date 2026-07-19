@@ -8,216 +8,100 @@
 import SwiftUI
 
 struct InsightScreen: View {
-
     @Environment(AppRouter.self) private var router
     @State private var viewModel = InsightViewModel()
 
     var body: some View {
         ZStack {
-            appBg
-                .ignoresSafeArea()
+            appBg.ignoresSafeArea()
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-
+                VStack(alignment: .leading, spacing: Spacing.s4) {
                     headerView
-
                     scoreCard
-
                     statsRow
-
                     weeklyCard
-
                     Text("Smart Insights")
-                        .font(.title3.bold())
-
+                        .font(.title)
+                        .foregroundStyle(Color.hydraInk)
                     ForEach(viewModel.insights) { item in
                         InsightCard(item: item)
                     }
+                    Spacer(minLength: 100)
                 }
-                .padding()
+                .padding(.horizontal, Spacing.screen)
+                .padding(.top, 12)
                 .scrollIndicators(.hidden)
             }
         }
         .navigationTitle("Insights")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            viewModel.onAppear()
+        .onAppear { viewModel.onAppear() }
+    }
+
+    private var headerView: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(LinearGradient.hydra)
+                    .frame(width: 56, height: 56)
+                    .softShadow()
+                Image(systemName: "chart.bar.xaxis")
+                    .font(.system(size: 26))
+                    .foregroundStyle(.white)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Your Hydration")
+                    .font(.subtitle)
+                    .foregroundStyle(Color.hydraInk)
+                Text("Insights")
+                    .font(.body)
+                    .foregroundStyle(Color.hydraInkSecondary)
+            }
+            Spacer()
+            IconButton(systemImage: "heart.fill") {}
         }
     }
-}
 
-extension InsightScreen {
-    private var headerView: some View {
-           HStack {
-
-               VStack(alignment: .leading, spacing: 2) {
-
-                   Text("Your Hydration")
-                       .font(.subheadline)
-                       .foregroundStyle(.secondary)
-
-                   Text("Insights")
-                       .font(.largeTitle.bold())
-               }
-
-               Spacer()
-
-               Image(systemName: "chart.bar.xaxis")
-                   .font(.title2)
-                   .foregroundStyle(.primary)
-                   .padding(12)
-                   .background(.regularMaterial)
-                   .clipShape(Circle())
-           }
-       }
-    
     private var scoreCard: some View {
-
-           VStack(spacing: 16) {
-
-               ZStack {
-
-                   Circle()
-                       .stroke(.quaternary, lineWidth: 16)
-
-                   Circle()
-                       .trim(from: 0, to: viewModel.animate ? CGFloat(viewModel.score) / 100 : 0)
-                       .stroke(
-                           AngularGradient(
-                               colors: [.cyan, .blue, .indigo],
-                               center: .center
-                           ),
-                           style: StrokeStyle(
-                               lineWidth: 16,
-                               lineCap: .round
-                           )
-                       )
-                       .rotationEffect(.degrees(-90))
-                       .animation(.easeOut(duration: 1.2), value: viewModel.animate)
-
-                   VStack(spacing: 2) {
-
-                       Text("\(viewModel.animate ? viewModel.score : 0)")
-                           .font(.system(size: 52, weight: .bold))
-                           .contentTransition(.numericText())
-                           .animation(.easeOut(duration: 1.2), value: viewModel.animate)
-
-                       Text("Hydration Score")
-                           .font(.subheadline)
-                           .foregroundStyle(.secondary)
-                   }
-               }
-               .frame(width: 200, height: 200)
-
-               Text(
-                   viewModel.score >= 75
-                   ? "You're well hydrated — nice work!"
-                   : "Room to improve this week"
-               )
-               .font(.headline)
-               .foregroundStyle(.blue)
-           }
-           .frame(maxWidth: .infinity)
-           .padding(.vertical, 24)
-           .background(.regularMaterial)
-           .clipShape(RoundedRectangle(cornerRadius: 24))
-       }
-    
-    private var statsRow: some View {
-
-            HStack(spacing: 12) {
-
-                StatCard(
-                    title: "Avg / Day",
-                    value: String(format: "%.1fL", viewModel.average),
-                    icon: "chart.bar.fill"
-                )
-
-                StatCard(
-                    title: "Goal Met",
-                    value: "\(viewModel.goalDays)/7",
-                    icon: "checkmark.seal.fill"
-                )
-
-                StatCard(
-                    title: "Total",
-                    value: String(format: "%.1fL", viewModel.total),
-                    icon: "drop.fill"
-                )
-            }
-        }
-    
-    private var weeklyCard: some View {
-
-            VStack(alignment: .leading, spacing: 14) {
-
-                HStack {
-
-                    Text("Weekly Overview")
-                        .font(.headline)
-
-                    Spacer()
-
-                    Text("Goal \(Int(viewModel.goal * 1000)) ml")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-
-                HStack(alignment: .bottom, spacing: 10) {
-
-                    ForEach(viewModel.weekData) { day in
-
-                        VStack(spacing: 8) {
-
-                            Capsule()
-                                .fill(
-                                    day.isToday
-                                    ? LinearGradient(
-                                        colors: [.blue, .cyan],
-                                        startPoint: .bottom,
-                                        endPoint: .top
-                                    )
-                                    : LinearGradient(
-                                        colors: [
-                                            .blue.opacity(0.35),
-                                            .blue.opacity(0.15)
-                                        ],
-                                        startPoint: .bottom,
-                                        endPoint: .top
-                                    )
-                                )
-                                .frame(
-                                    height: viewModel.animate
-                                    ? max(
-                                        28,
-                                        CGFloat(day.amount / viewModel.maxAmount) * 120
-                                    )
-                                    : 28
-                                )
-                                .animation(
-                                    .spring(response: 0.7, dampingFraction: 0.8)
-                                    .delay(0.1),
-                                    value: viewModel.animate
-                                )
-
-                            Text(day.weekday)
-                                .font(.caption)
-                                .foregroundStyle(
-                                    day.isToday ? .blue : .secondary
-                                )
-
-                            Text("\(day.date)")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                        }
+        Card(padding: Spacing.s4, radius: Radius.xl) {
+            VStack(spacing: 16) {
+                WaterProgressRing(progress: Double(viewModel.score) / 100, lineWidth: 22) {
+                    VStack(spacing: 2) {
+                        Text("\(viewModel.score)")
+                            .font(.hero)
+                            .foregroundStyle(Color.hydraInk)
+                        Text("Hydration Score")
+                            .font(.caption)
+                            .foregroundStyle(Color.hydraInkSecondary)
                     }
                 }
+                .frame(width: 180, height: 180)
+
+                Text(viewModel.score >= 75 ? "You're well hydrated — nice work!" : "Room to improve this week")
+                    .font(.emphasis)
+                    .foregroundStyle(Color.hydraPrimary)
             }
-            .padding()
-            .background(.regularMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .frame(maxWidth: .infinity, alignment: .center)
         }
+    }
+
+    private var statsRow: some View {
+        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
+            StatTile(icon: "chart.bar.fill", value: String(format: "%.1fL", viewModel.average), label: "Avg/Day")
+            StatTile(icon: "checkmark.seal.fill", value: "\(viewModel.goalDays)/7", label: "Goal Met")
+            StatTile(icon: "drop.fill", value: String(format: "%.1fL", viewModel.total), label: "Total")
+        }
+    }
+
+    private var weeklyCard: some View {
+        Card {
+            SectionHeader(title: "Weekly Overview")
+            HStack(alignment: .bottom, spacing: 10) {
+                WeeklyBarChart(bars: viewModel.weeklyBars, maxValue: viewModel.maxAmount)
+            }
+        }
+    }
 }
 
 #Preview {

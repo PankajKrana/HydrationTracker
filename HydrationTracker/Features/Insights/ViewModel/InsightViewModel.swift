@@ -10,41 +10,57 @@ import SwiftUI
 @Observable
 final class InsightViewModel {
 
-    let goal: Double = 3.0
-    let score: Int = 78
+    private let store = IntakeStore.shared
+    private let calendar = Calendar.current
+
+    let goal: Double = {
+        let stored = UserDefaults.standard.double(forKey: StorageKey.dailyGoalLiters)
+        return stored > 0 ? stored : 3.0
+    }()
 
     var animate = false
 
-    let weekData: [InsightDay] = [
-        .init(weekday: "M", date: 13, amount: 2.1, isToday: false),
-        .init(weekday: "T", date: 14, amount: 3.4, isToday: false),
-        .init(weekday: "W", date: 15, amount: 2.8, isToday: false),
-        .init(weekday: "T", date: 16, amount: 1.6, isToday: false),
-        .init(weekday: "F", date: 17, amount: 3.1, isToday: false),
-        .init(weekday: "S", date: 18, amount: 3.6, isToday: false),
-        .init(weekday: "S", date: 19, amount: 2.4, isToday: true)
-    ]
+    /// Hydration score: average weekly goal adherence, 0–100.
+    var score: Int {
+        let goalML = goal * 1000
+        guard goalML > 0 else { return 0 }
+        let adherence = Double(store.totalWeekML) / (goalML * 7)
+        return min(100, max(0, Int(adherence * 100)))
+    }
 
-    let insights: [InsightItem] = [
-        .init(
-            icon: "sun.max.fill",
-            tint: .orange,
-            title: "Morning boost needed",
-            message: "You hit only 30% of your goal before noon. A glass on wake-up helps."
-        ),
-        .init(
-            icon: "flame.fill",
-            tint: .pink,
-            title: "12-day streak",
-            message: "Your consistency is in the top 10%. Keep the momentum going!"
-        ),
-        .init(
-            icon: "moon.fill",
-            tint: .indigo,
-            title: "Late-night sips",
-            message: "You drink most after 8 PM. Try shifting intake earlier for deeper sleep."
-        )
-    ]
+    var weekData: [InsightDay] {
+        store.weeklyTotals.map { total in
+            InsightDay(
+                weekday: IntakeStore.weekdaySymbol(total.date),
+                date: calendar.component(.day, from: total.date),
+                amount: Double(total.totalML) / 1000,
+                isToday: calendar.isDateInToday(total.date)
+            )
+        }
+    }
+
+    var insights: [InsightItem] {
+        [
+            .init(
+                icon: "sun.max.fill",
+                tint: .orange,
+                title: "Morning boost needed",
+                message: "You hit only 30% of your goal before noon. A glass on wake-up helps."
+            ),
+            .init(
+                icon: "flame.fill",
+                tint: .pink,
+                title: "\(store.streakDays)-day streak",
+                message: "Your consistency is paying off. Keep the momentum going!"
+            ),
+            .init(
+                icon: "moon.fill",
+                tint: .indigo,
+                title: "Late-night sips",
+                message: "You drink most after 8 PM. Try shifting intake earlier for deeper sleep."
+            )
+        ]
+    }
 
     var maxAmount: Double {
         weekData.map(\.amount).max() ?? 1
@@ -60,6 +76,16 @@ final class InsightViewModel {
 
     var goalDays: Int {
         weekData.filter { $0.amount >= goal }.count
+    }
+
+    var weeklyBars: [WeeklyBarChart.Bar] {
+        store.weeklyTotals.map { total in
+            WeeklyBarChart.Bar(
+                label: IntakeStore.weekdaySymbol(total.date),
+                value: Double(total.totalML) / 1000,
+                isToday: calendar.isDateInToday(total.date)
+            )
+        }
     }
 
     func onAppear() {

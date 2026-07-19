@@ -25,6 +25,7 @@ struct DailyGoalScreen_: View {
                     Spacer()
 
                     Button("Skip") {
+                        UserDefaults.standard.set(3.0, forKey: StorageKey.dailyGoalLiters)
                         router.reset(to: .home)
                     }
                     .font(.headline)
@@ -75,6 +76,8 @@ struct DailyGoalScreen_: View {
                 Spacer()
                 
                 ReusableButton(title: "Looks good!") {
+                    UserDefaults.standard.set(3.1, forKey: StorageKey.dailyGoalLiters)
+                    UserDefaults.standard.set(true, forKey: StorageKey.isLoggedIn)
                     router.reset(to: .content)
                 }
 
