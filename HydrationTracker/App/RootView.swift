@@ -15,6 +15,7 @@ struct RootView: View {
             OnboardingScreen()
                 .navigationDestination(for: AppRouter.Route.self) { route in
                     switch route {
+                    case .content:      ContentView()
                     case .onboarding:       OnboardingScreen()
                     case .signUp:           SignUpWithEmail()
                     case .onboardingGender: OnboardingAgeScreen()

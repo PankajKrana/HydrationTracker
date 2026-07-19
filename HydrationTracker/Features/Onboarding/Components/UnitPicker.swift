@@ -10,7 +10,7 @@ struct UnitPicker: View {
             } label: {
                 Text("ft in")
                     .foregroundStyle(
-                        selectedUnit == .feet ? .black : .gray
+                        selectedUnit == .feet ? .primary : .secondary
                     )
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
@@ -21,13 +21,13 @@ struct UnitPicker: View {
             } label: {
                 Text("cm")
                     .foregroundStyle(
-                        selectedUnit == .cm ? .black : .gray
+                        selectedUnit == .cm ? .primary : .secondary
                     )
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
             }
         }
-        .background(.white.opacity(0.9))
+        .background(.regularMaterial)
         .clipShape(Capsule())
         .overlay {
             Capsule()

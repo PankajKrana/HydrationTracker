@@ -46,7 +46,7 @@ struct OnboardingScreen: View {
                 SocialLoginButton(action: {}) {
                     Image(systemName: "applelogo")
                         .font(.title2)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(.primary)
                 }
 
                 

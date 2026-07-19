@@ -28,7 +28,7 @@ struct BedTimeScreen: View {
                         router.push(.dailyGoal)
                     }
                     .font(.headline)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
                 }
                 .padding(.horizontal)
                 .padding(.top)

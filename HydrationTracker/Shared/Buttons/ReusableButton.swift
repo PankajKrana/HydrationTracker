@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ReusableButton: View {
     let title: String
-    var backgroundColor: Color = .blue
+    var backgroundColor: Color = .accentColor
     var foregroundColor: Color = .white
     let action: () -> Void
 

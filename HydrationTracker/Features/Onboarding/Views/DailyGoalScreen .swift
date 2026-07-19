@@ -28,7 +28,7 @@ struct DailyGoalScreen_: View {
                         router.reset(to: .home)
                     }
                     .font(.headline)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
 
                 }
                 .padding(.horizontal)
@@ -75,7 +75,7 @@ struct DailyGoalScreen_: View {
                 Spacer()
                 
                 ReusableButton(title: "Looks good!") {
-                    router.reset(to: .home)
+                    router.reset(to: .content)
                 }
 
             }

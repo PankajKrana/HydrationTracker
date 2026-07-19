@@ -13,6 +13,7 @@ final class AppRouter {
     var path = NavigationPath()
 
     enum Route: Hashable {
+        case content
         case onboarding
         case signUp
         case onboardingGender

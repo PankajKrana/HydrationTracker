@@ -31,7 +31,7 @@ struct HeightScreen: View {
                             router.push(.bedTime)
                         }
                         .font(.headline)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(.primary)
                     }
                     .padding(.horizontal)
                     .padding(.top)
@@ -40,7 +40,8 @@ struct HeightScreen: View {
 
                     // MARK: Title
                     Text("What's\nYour Height?")
-                        .font(.system(size: 38, weight: .bold))
+                        .font(.largeTitle)
+                        .bold()
                         .multilineTextAlignment(.center)
 
                     Spacer()
@@ -48,13 +49,15 @@ struct HeightScreen: View {
                     // MARK: Current Height
                     HStack(alignment: .firstTextBaseline, spacing: 3) {
                         Text("\(vm.ft)")
-                            .font(.system(size: 42, weight: .bold))
+                            .font(.largeTitle)
+                            .bold()
 
                         Text("ft")
                             .foregroundStyle(.secondary)
 
                         Text("\(vm.inch)")
-                            .font(.system(size: 42, weight: .bold))
+                            .font(.largeTitle)
+                            .bold()
 
                         Text("in")
                             .foregroundStyle(.secondary)

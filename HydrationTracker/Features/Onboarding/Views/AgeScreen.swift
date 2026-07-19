@@ -27,7 +27,7 @@ struct AgeScreen: View {
                         router.push(.weight)
                     }
                     .font(.headline)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
 
                 }
                 .padding(.horizontal)

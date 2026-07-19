@@ -35,7 +35,7 @@ struct WeightScreen: View {
                         router.push(.height)
                     }
                     .font(.headline)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
 
                 }
                 .padding(.horizontal)
@@ -46,7 +46,8 @@ struct WeightScreen: View {
                 // MARK: Title
 
                 Text("What's your\nbody Weight?")
-                    .font(.system(size: 36, weight: .bold))
+                    .font(.largeTitle)
+                    .bold()
                     .multilineTextAlignment(.center)
 
                 Spacer()
@@ -56,7 +57,8 @@ struct WeightScreen: View {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
 
                     Text("\(Int(weight))")
-                        .font(.system(size: 48, weight: .bold))
+                        .font(.largeTitle)
+                        .bold()
 
                     Text("kg")
                         .font(.title3)

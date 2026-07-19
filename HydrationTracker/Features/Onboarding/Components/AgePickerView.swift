@@ -10,7 +10,8 @@ struct AgePickerView: View {
 
             HStack {
                 Text("\(age)")
-                    .font(.system(size: 50, weight: .bold))
+                    .font(.largeTitle)
+                    .bold()
 
                 Text("years")
                     .foregroundStyle(.secondary)

@@ -11,7 +11,7 @@ struct SkipButton: View {
                 .foregroundStyle(.blue)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 8)
-                .background(.white.opacity(0.9))
+                .background(.regularMaterial)
                 .clipShape(Capsule())
         }
     }

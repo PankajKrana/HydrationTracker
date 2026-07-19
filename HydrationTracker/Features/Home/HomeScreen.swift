@@ -61,7 +61,7 @@ extension View {
             Image(systemName: "person")
                 .font(.title2)
                 .padding()
-                .background(.white.opacity(0.4))
+                .background(.regularMaterial)
                 .clipShape(Circle())
             
             VStack(alignment: .leading) {
@@ -79,9 +79,9 @@ extension View {
             } label: {
                 Image(systemName: "bell")
                     .font(.title2)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
                     .padding()
-                    .background(.white.opacity(0.5))
+                    .background(.regularMaterial)
                     .clipShape(Circle())
             }
 
@@ -162,7 +162,7 @@ struct InsertWaterIntakeView: View {
             Text(intakeWater)
         }
         .padding()
-        .background(.white.opacity(0.4))
+        .background(.regularMaterial)
         .clipShape(.rect)
     }
 }
