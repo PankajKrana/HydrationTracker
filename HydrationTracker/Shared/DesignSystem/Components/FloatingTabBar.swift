@@ -77,7 +77,7 @@ struct MainTabView: View {
             }
 
             FloatingTabBar(selected: $selected)
-                .padding(.bottom, 8)
+                .padding(.bottom, 2)
         }
     }
 }

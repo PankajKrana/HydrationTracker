@@ -66,7 +66,7 @@ struct HomeScreen: View {
                     }
                     .accessibilityLabel("Log Drink")
                     .padding(.trailing, 20)
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 70)
                 }
             }
         }
